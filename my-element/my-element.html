@@ -3,11 +3,15 @@
 <dom-module id="my-element">
   <template>
     <style>
-      :host {
-        display: block;
+      h1 {
+        font-variant: small-caps;
+      }
+
+      .name {
+        color: red;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <h1>Hello <span class="name">[[name]]</span>!</h1>
   </template>
 
   <script>
@@ -23,9 +27,9 @@
       static get is() { return 'my-element'; }
       static get properties() {
         return {
-          prop1: {
+          name: {
             type: String,
-            value: 'my-element'
+            value: 'Polymer'
           }
         };
       }

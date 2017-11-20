@@ -1,19 +1,24 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Html exposing (Html, Attribute, text, div, h1, img, node)
+import Html.Attributes exposing (attribute, src)
 
+---- WRAPPER ----
+
+myElement : List (Attribute msg) -> List (Html msg) -> Html msg
+myElement attributes children =
+    node "my-element" attributes children
 
 ---- MODEL ----
 
 
 type alias Model =
-    {}
+    { name: String }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( { name = "Elm" }, Cmd.none )
 
 
 
@@ -38,6 +43,7 @@ view model =
     div []
         [ img [ src "/logo.svg" ] []
         , h1 [] [ text "Your Elm App is working!" ]
+        , myElement [ attribute "name" model.name ] []
         ]
 
 

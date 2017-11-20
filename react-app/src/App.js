@@ -11,6 +11,11 @@ class App extends Component {
     this.state = {
       name: 'React'
     };
+    this.onChangeTheName = this.onChangeTheName.bind(this);
+  }
+
+  onChangeTheName({ detail: { name }}) {
+    this.setState({ name });
   }
 
   render() {
@@ -21,7 +26,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to <span className="name">React</span></h1>
         </header>
         <p className="App-intro">
-          <MyWrapper name={ this.state.name }/>
+          <MyWrapper name={this.state.name} onChangeTheName={this.onChangeTheName} />
         </p>
       </div>
     );

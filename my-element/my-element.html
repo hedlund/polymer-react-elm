@@ -1,28 +1,36 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 
 <dom-module id="my-element">
   <template>
     <style>
       h1 {
-        font-variant: small-caps;
+        text-decoration: underline;
+      }
+
+      .container {
+        max-width: 400px;
+        margin: auto;
       }
 
       .name {
         color: red;
       }
     </style>
-    <h1>Hello <span class="name">[[name]]</span>!</h1>
+    <div class="container">
+      <h1>Hello <span class="name">[[name]]</span>!</h1>
+      <div>
+        <paper-input always-float-label label="New Name" id="newName">
+            <iron-icon icon="check-box" slot="prefix"></iron-icon>
+        </paper-input>
+        <paper-button raised class="green" on-click="handleClick">Change</paper-button>
+      </div>
+    </div>
   </template>
 
   <script>
-    /**
-     * `my-element`
-     * 
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
     class MyElement extends Polymer.Element {
       static get is() { return 'my-element'; }
       static get properties() {
@@ -32,6 +40,17 @@
             value: 'Polymer'
           }
         };
+      }
+
+      handleClick() {
+        if (this.$.newName.value !== '') {
+          this.dispatchEvent(new CustomEvent('changeTheName', {
+            detail: {
+              name: this.$.newName.value
+            }
+          }));
+          this.$.newName.value = '';
+        }
       }
     }
 

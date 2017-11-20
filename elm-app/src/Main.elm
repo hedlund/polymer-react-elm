@@ -2,8 +2,18 @@ module Main exposing (..)
 
 import Html exposing (Html, Attribute, text, div, h1, img, node)
 import Html.Attributes exposing (attribute, src)
+import Html.Events exposing (on)
+import Json.Decode as Json
 
 ---- WRAPPER ----
+
+detailName : Json.Decoder String
+detailName =
+    Json.at [ "detail", "name" ] Json.string
+
+onChangeTheName : (String -> msg) -> Attribute msg
+onChangeTheName msg =
+    on "changeTheName" (Json.map msg detailName)
 
 myElement : List (Attribute msg) -> List (Html msg) -> Html msg
 myElement attributes children =
@@ -27,11 +37,16 @@ init =
 
 type Msg
     = NoOp
+    | ChangeTheName String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+        ChangeTheName newName ->
+            ( { model | name=newName }, Cmd.none )
 
 
 
@@ -43,7 +58,7 @@ view model =
     div []
         [ img [ src "/logo.svg" ] []
         , h1 [] [ text "Your Elm App is working!" ]
-        , myElement [ attribute "name" model.name ] []
+        , myElement [ attribute "name" model.name, onChangeTheName ChangeTheName ] []
         ]
 
 

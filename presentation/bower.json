@@ -1,0 +1,6 @@
+{
+  "name": "presentation",
+  "dependencies": {
+    "emoji-rain": "^1.0.4"
+  }
+}

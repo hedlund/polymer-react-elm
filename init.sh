@@ -3,6 +3,7 @@
 (cd my-element && bower install)
 (cd react-app && yarn install)
 (cd elm-app && elm-app install -y)
+(cd presentation && bower install)
 
 # Yeah, this is a massive hack, but Polymer expects all elements
 # to be on the same level, i.e. in a bower_components (or similar)

@@ -1,0 +1,842 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Web Components</title>
+  <style type="text/css">
+    body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #222;
+  font-size: 100%;
+  background-color: #f7f7f7;
+}
+
+.slide {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+
+.slide-content {
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  /*margin: 80px auto 0 auto;*/
+  margin: 0 auto 0 auto;
+  padding: 30px;
+
+  font-weight: 200;
+  font-size: 200%;
+  line-height: 1.375;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.arrow {
+  width: 0; height: 0;
+  border: 30px solid #333;
+  float: left;
+  margin-right: 30px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+
+  border-left-width: 0;
+  border-right-width: 50px;
+}
+
+.next {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+
+  border-left-width: 50px;
+  border-right-width: 0;
+}
+
+.prev:hover {
+  border-right-color: #888;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-left-color: #888;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 300%;
+  line-height: 1.2;
+  text-align: center;
+  margin: 170px 0 0;
+}
+
+h2 {
+  font-size: 100%;
+  line-height: 1.2;
+  margin: 5px 0;
+  text-align: center;
+  font-weight: 200;
+}
+
+h3 {
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px solid #aaa;
+  margin: 0;
+  padding-bottom: 15px;
+}
+
+ul {
+  padding: 0 0 0 60px;
+  font-weight: 200;
+  line-height: 1.375;
+}
+
+.author h1 {
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.author h3 {
+  font-weight: 100;
+  text-align: center;
+  font-size: 95%;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+  color: #44a4dd;
+}
+
+a:hover {
+  color: #66b5ff;
+}
+
+pre {
+  font-size: 60%;
+  line-height: 1.3;
+}
+
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 3px;
+  background-color: #b4b4b4;
+
+  -webkit-transition: width 0.05s ease-out;
+  -moz-transition: width 0.05s ease-out;
+  -o-transition: width 0.05s ease-out;
+  transition: width 0.05s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 850px) {
+
+  body {
+    font-size: 70%;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1 {
+    margin-top: 120px;
+  }
+
+  .prev, .prev:hover {
+    border-right-color: rgba(135, 135, 135, 0.5);
+  }
+
+  .next, .next:hover {
+    border-left-color: rgba(135, 135, 135, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 50%;
+    overflow: hidden;
+  }
+
+  .slide-content {
+    padding: 10px;
+    margin-top: 10px;
+    height: 340px;
+  }
+
+  h1 {
+    margin-top: 50px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    border: 1px solid #222;
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+  }
+
+  .slide:nth-child(even) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
+  </style>
+    <script async src="http://localhost:35729/livereload.js"></script>
+
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="bower_components/emoji-rain/emoji-rain.html">
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="slide" id="slide-1">
+    <section class="slide-content"><h1 id="-img-src-img-webcomponents-svg-style-width-250px-"><img src="img/webcomponents.svg" style="width: 250px;" /></h1>
+<h2 id="-web-components-polymer-code-sharing-"><strong>Web Components, Polymer &amp; code sharing</strong></h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-2">
+    <section class="slide-content"><h3 id="web-components">Web Components</h3>
+<p>A concept built on a set of web standards to create custom, reusable, encapsulated HTML tags.</p>
+<p>Primarily based on four specifications:</p>
+<ul>
+<li><a href="https://w3c.github.io/webcomponents/spec/custom/">Custom Elements</a></li>
+<li><a href="https://w3c.github.io/webcomponents/spec/shadow/">Shadow DOM</a></li>
+<li><a href="https://w3c.github.io/webcomponents/spec/imports/">HTML imports</a></li>
+<li><a href="https://html.spec.whatwg.org/multipage/scripting.html#the-template-element/">HTML template</a></li>
+</ul>
+<p><img src="img/webcomponents.svg" style="width: 200px; position: absolute; right: 30px; bottom: 30px" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-3">
+    <section class="slide-content"><h3 id="custom-elements">Custom Elements</h3>
+<p>TBD</p>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-4">
+    <section class="slide-content"><h3 id="shadow-dom">Shadow DOM</h3>
+<p>TBD</p>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-5">
+    <section class="slide-content"><h3 id="shadow-dom-virtual-dom">Shadow DOM != Virtual DOM</h3>
+<p>Virtual DOM:</p>
+<p>Shadow DOM:</p>
+<ul>
+<li>Subtree</li>
+<li>Encapsulation</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-6">
+    <section class="slide-content"><h3 id="html-imports">HTML imports</h3>
+<p>TBD</p>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-7">
+    <section class="slide-content"><h3 id="html-template">HTML template</h3>
+<p>TBD</p>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-8">
+    <section class="slide-content"><h3 id="-webcomponents-org-https-www-webcomponents-org-"><a href="https://www.webcomponents.org">webcomponents.org</a></h3>
+<p><img src="img/webcomponents-org.png" style="width: 100%" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-9">
+    <section class="slide-content"><h3 id="using-web-components">Using Web Components</h3>
+<p>Install Polyfills &amp; components:</p>
+<pre><code>bower install webcomponents/webcomponentsjs
+bower install emoji-rain</code></pre>
+<p>Link the files in your HTML page:</p>
+<pre><code>&lt;script src=&quot;bower_components/webcomponentsjs/webcomponents-lite.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;import&quot; href=&quot;bower_components/emoji-rain/emoji-rain.html&quot;&gt;</code></pre>
+<p>Use the imported component:</p>
+<pre><code>&lt;emoji-rain active&gt;&lt;/emoji-rain&gt;</code></pre>
+<p><img src="img/bower.svg" style="width: 200px; position: absolute; right: 30px; bottom: 30px" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-10">
+    <section class="slide-content"><p><emoji-rain active style="position: absolute; top: 0; left: 0"></emoji-rain></p>
+<h1 id="great-success-">Great success!</h1>
+<div style="font-family: monospace; text-align: center">
+  &lt;emoji-rain active&gt;&lt;/emoji-rain&gt;
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-11">
+    <section class="slide-content"><h3 id="browser-support">Browser support</h3>
+<p><img src="img/browser-support.png" style="width: 100%" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-12">
+    <section class="slide-content"><h3 id="libraries-to-make-life-easier">Libraries to make life easier</h3>
+<ul>
+<li><a href="https://www.polymer-project.org/">Polymer</a></li>
+<li><a href="https://bosonic.github.io/">Bosonic</a></li>
+<li><a href="https://github.com/skatejs/skatejs">SkateJS</a></li>
+<li><a href="http://slimjs.com/">Slim.js</a></li>
+<li><a href="https://stenciljs.com/">Stencil</a></li>
+<li><a href="https://x-tag.github.io/">X-Tag</a></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-13">
+    <section class="slide-content"><div style="position: relative">
+  <div style="position: absolute; bottom: 0">
+    <h1>Polymer</h1>
+    <h2 style="position: relative; top: -30px; left: 110px">#UseThePlatform</h2>
+  </div>
+  <img src="img/polymer.svg" style="width: 100%" />
+
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-14">
+    <section class="slide-content"><h3 id="polymer-project">Polymer Project</h3>
+<p>Google project focusing on libraries, tools and patterns for <strong>Progressive Web Apps</strong>, taking full advantage of cutting-edge platform features like <strong>Web Components</strong>, <strong>Service Workers</strong> and <strong>HTTP/2</strong>.</p>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-15">
+    <section class="slide-content"><h3 id="polymer-library">Polymer Library</h3>
+<p>Polymer sprinkles a bit of sugar over the standard Web Components APIs.</p>
+<pre><code>&lt;dom-module id=&quot;x-custom&quot;&gt;
+      &lt;template&gt;
+        &lt;div&gt;{{greeting}}&lt;/div&gt;
+      &lt;/template&gt;
+
+      &lt;script&gt;
+        class XCustom extends Polymer.Element {
+
+          static get is() { return &#39;x-custom&#39;; }
+
+          static get properties() {
+            return {
+              greeting: {
+                type: String,
+                value: &quot;Hello!&quot;
+              }
+            }
+          }
+        }
+
+        customElements.define(XCustom.is, XCustom);
+      &lt;/script&gt;
+    &lt;/dom-module&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-16">
+    <section class="slide-content"><h3 id="polymer-app-toolbox">Polymer App Toolbox</h3>
+<p>A collection of components, tools and templates for building Progressive Web Apps:</p>
+<ul>
+<li><a href="https://www.webcomponents.org/collection/PolymerElements/iron-elements">Iron Elements</a>: Basic application building blocks</li>
+<li><a href="https://www.webcomponents.org/collection/PolymerElements/paper-elements">Paper Elements</a>: A set of UI components implementing Google&#39;s Material Design</li>
+<li><a href="https://www.webcomponents.org/collection/PolymerElements/gold-elements">Gold Elements</a>: E-commerce form elements</li>
+<li><a href="https://www.webcomponents.org/collection/PolymerElements/platinum-elements">Platinum Elements</a>: App-like features - push notifications, offline caching, bluetooth</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-17">
+    <section class="slide-content"><h3 id="polymer-element-structure">Polymer element structure</h3>
+<pre><code>&lt;link rel=&quot;import&quot; href=&quot;../polymer/polymer-element.html&quot;&gt;
+
+&lt;dom-module id=&quot;my-element&quot;&gt;
+  &lt;template&gt;
+    &lt;style&gt; /* The styles */&lt;/style&gt;
+
+    &lt;div&gt;
+      &lt;!-- The view --&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+
+  &lt;script&gt;
+    class MyElement extends Polymer.Element {
+      /* The logic */
+    }
+
+    window.customElements.define(MyElement.is, MyElement);
+  &lt;/script&gt;
+&lt;/dom-module&gt;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-18">
+    <section class="slide-content"><p><img src="img/my-element.png" style="width: 600px" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-19">
+    <section class="slide-content"><h3 id="importing-dependencies">Importing dependencies</h3>
+<pre><code>&lt;link rel=&quot;import&quot; href=&quot;../polymer/polymer-element.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;../paper-input/paper-input.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;../paper-button/paper-button.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;../iron-icons/iron-icons.html&quot;&gt;
+
+&lt;dom-module id=&quot;my-element&quot;&gt;
+  &lt;template&gt;
+    &lt;style&gt; /* The styles */&lt;/style&gt;
+
+    &lt;div&gt;
+      &lt;!-- The view --&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+
+  ...</code></pre>
+<p><img src="img/my-element.png" style="width: 500px; position: absolute; right: 20px; bottom: 20px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-20">
+    <section class="slide-content"><h3 id="template">Template</h3>
+<pre><code>  &lt;template&gt;
+    &lt;style&gt;
+      h1 {
+        text-decoration: underline;
+      }
+
+      .name {
+        color: red;
+      }
+    &lt;/style&gt;
+
+    &lt;div class=&quot;container&quot;&gt;
+
+      &lt;h1&gt;Hello &lt;span class=&quot;name&quot;&gt;[[name]]&lt;/span&gt;!&lt;/h1&gt;
+
+      &lt;div&gt;
+        &lt;paper-input always-float-label label=&quot;New Name&quot; id=&quot;newName&quot;&gt;&lt;/paper-input&gt;
+        &lt;paper-button raised class=&quot;green&quot; on-click=&quot;handleClick&quot;&gt;Change&lt;/paper-button&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  &lt;/template&gt;</code></pre>
+<p><img src="img/my-element.png" style="width: 500px; position: absolute; right: 20px; bottom: 20px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-21">
+    <section class="slide-content"><h3 id="script">Script</h3>
+<pre><code>  &lt;script&gt;
+    class MyElement extends Polymer.Element {
+      static get is() { return &#39;my-element&#39;; }
+      static get properties() {
+        return {
+          name: {
+            type: String,
+            value: &#39;Polymer&#39;
+          }
+        };
+      }
+
+      handleClick() {
+        if (this.$.newName.value !== &#39;&#39;) {
+          this.dispatchEvent(new CustomEvent(&#39;changeTheName&#39;, {
+            detail: {
+              name: this.$.newName.value
+            }
+          }));
+          this.$.newName.value = &#39;&#39;;
+        }
+      }
+    }
+
+    window.customElements.define(MyElement.is, MyElement);
+  &lt;/script&gt;</code></pre>
+<p><img src="img/my-element.png" style="width: 500px; position: absolute; right: 20px; bottom: 20px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-22">
+    <section class="slide-content"><h3 id="polymer-3">Polymer 3</h3>
+<pre><code>import { Element }
+    from &#39;../node_modules/@polymer/polymer/polymer-element.js&#39;;
+
+export class MyApp extends Element {
+
+  static get template() {
+    return `&lt;div&gt;This is my [[name]] app.&lt;/div&gt;`
+  }
+
+  constructor() {
+    super();
+    this.name = &#39;3.0 preview&#39;;
+  }
+
+  static get properties() {
+    name: {
+      Type: String
+    }
+  }
+}
+
+customElements.define(&#39;my-app&#39;, MyApp);</code></pre>
+<p><img src="img/npm.svg" style="width: 300px; position: absolute; right: 30px; bottom: 30px" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-23">
+    <section class="slide-content"><h1 id="why-">Why?</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-24">
+    <section class="slide-content"><h1 id="why-">Why?</h1>
+<p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-25">
+    <section class="slide-content"><h1 id="why-">Why?</h1>
+<p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" />
+<img src="img/backbone.svg" style="width: 500px; position: absolute; bottom: 150px; left: 100px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-26">
+    <section class="slide-content"><h1 id="why-">Why?</h1>
+<p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" />
+<img src="img/backbone.svg" style="width: 500px; position: absolute; bottom: 150px; left: 100px;" />
+<img src="img/angular.svg" style="width: 250px; position: absolute; top: 50px; left: 100px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-27">
+    <section class="slide-content"><h1 id="why-">Why?</h1>
+<p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" />
+<img src="img/backbone.svg" style="width: 500px; position: absolute; bottom: 150px; left: 100px;" />
+<img src="img/angular.svg" style="width: 250px; position: absolute; top: 50px; left: 100px;" />
+<img src="img/elm.svg" style="width: 250px; position: absolute; bottom: 50px; right: 400px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-28">
+    <section class="slide-content"><h3 id="code-sharing-span-style-font-weight-normal-font-size-0-5em-color-aaa-a-k-a-i-m-lazy-don-t-want-to-do-it-twice-span-">Code Sharing <span style="font-weight: normal; font-size: 0.5em; color: #aaa"> a.k.a. I&#39;m lazy &amp; don&#39;t want to do it twice!</span></h3>
+<p>Hosted NPM repository for module sharing:</p>
+<ul>
+<li>Nexus</li>
+<li>Sinopia</li>
+<li>Private npmjs.com</li>
+</ul>
+<p>Share modules of:</p>
+<ul>
+<li>Styling (CSS/Less/Sass)</li>
+<li>React/Angular/Elm components</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-29">
+    <section class="slide-content"><p><emoji-rain active style="position: absolute; top: 0; left: 0"></emoji-rain></p>
+<h1 id="share-web-components-instead-">Share Web Components Instead!</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-30">
+    <section class="slide-content"><h3 id="react">React</h3>
+<pre><code>class App extends Component {
+  render() {
+    return (
+      &lt;div className=&quot;App&quot;&gt;
+        &lt;my-element name={this.props.name} /&gt;
+      &lt;/div&gt;
+    );
+  }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-31">
+    <section class="slide-content"><h3 id="react-adding-event-handling">React: Adding event handling</h3>
+<pre><code>class App extends Component {
+
+  componentDidMount() {
+    this.elem.addEventListener(&#39;changeTheName&#39;, this.onChangeTheName);
+  }
+
+  componentWillUnmount() {
+    this.elem.removeEventListener(&#39;changeTheName&#39;, this.onChangeTheName);
+  }
+
+  onChangeTheName({ detail: { name } }) {
+    // use the name
+  }
+
+  render() {
+    return (
+      &lt;div className=&quot;App&quot;&gt;
+        &lt;my-element name={this.props.name} ref={e =&gt; this.elem = e} /&gt;
+      &lt;/div&gt;
+    );
+  }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-32">
+    <section class="slide-content"><h3 id="elm">Elm</h3>
+<pre><code>myElement : List (Attribute msg) -&gt; List (Html msg) -&gt; Html msg
+myElement attributes children =
+    node &quot;my-element&quot; attributes children
+
+
+
+view : Model -&gt; Html Msg
+view model =
+    div []
+        [ myElement [ attribute &quot;name&quot; model.name] []
+        ]</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-33">
+    <section class="slide-content"><h3 id="elm-adding-event-handling">Elm: Adding event handling</h3>
+<pre><code>nameExtractor : Json.Decoder String
+nameExtractor =
+    Json.at [ &quot;detail&quot;, &quot;name&quot; ] Json.string
+
+onChangeTheName : (String -&gt; msg) -&gt; Attribute msg
+onChangeTheName msg =
+    on &quot;changeTheName&quot; (Json.map msg nameExtractor)
+
+myElement : List (Attribute msg) -&gt; List (Html msg) -&gt; Html msg
+myElement attributes children =
+    node &quot;my-element&quot; attributes children
+
+
+view : Model -&gt; Html Msg
+view model =
+    div []
+        [ myElement [ attribute &quot;name&quot; model.name, , onChangeTheName ChangeTheName] []
+        ]</code></pre>
+</section>
+  </div>
+  <div class="slide hidden author-slide" id="slide-34">
+    <section class="slide-content"><div class="author">
+  <h1 class="name"></h1>
+    <h3 class="url">
+      <a href="https://github.com/hedlund/polymer-react-elm">https://github.com/hedlund/polymer-react-elm</a>
+    </h3>
+</div>
+</section>
+  </div>
+
+  <div class="controls">
+    <div class="arrow prev"></div>
+    <div class="arrow next"></div>
+  </div>
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  /* Positions are 1-indexed, so we need to add and subtract 1 */
+  var nextPosition = (position - 1 + n) % numSlides + 1;
+
+  /* Normalize nextPosition in-case of a negative modulo result */
+  nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+  document.getElementById('slide-' + position).classList.add('hidden');
+  document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+  updateProgress();
+  updateURL();
+  updateTabIndex();
+}
+
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  try {
+    window.history.replaceState({} , null, '#' + currentPosition());
+  } catch (e) {
+    window.location.hash = currentPosition();
+  }
+}
+
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+         document.mozFullScreenElement ||
+         document.webkitFullscreenElement ||
+         document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+      docElem.requestFullscreen ||
+      docElem.msRequestFullscreen ||
+      docElem.mozRequestFullScreen ||
+      docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+      doc.exitFullscreen ||
+      doc.msExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function (e) {
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function (e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function (e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+});
+
+  </script>
+</body>
+</html>

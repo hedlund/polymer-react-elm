@@ -249,3 +249,15 @@ pre {
     page-break-before: always;
   }
 }
+
+.high1 {
+  background-color: yellow;
+}
+
+.high2 {
+  background-color: orange;
+}
+
+.high3 {
+  background-color: greenyellow;
+}

@@ -257,6 +257,17 @@ pre {
   }
 }
 
+.high1 {
+  background-color: yellow;
+}
+
+.high2 {
+  background-color: orange;
+}
+
+.high3 {
+  background-color: greenyellow;
+}
   </style>
     <script async src="http://localhost:35729/livereload.js"></script>
 
@@ -269,54 +280,101 @@ pre {
   </div>
 
   <div class="slide" id="slide-1">
-    <section class="slide-content"><h1 id="-img-src-img-webcomponents-svg-style-width-250px-"><img src="img/webcomponents.svg" style="width: 250px;" /></h1>
-<h2 id="-web-components-polymer-code-sharing-"><strong>Web Components, Polymer &amp; code sharing</strong></h2>
-</section>
+    <section class="slide-content"><p><img src="img/rainbows.png" style="width: 800px; margin-top: -50px;" /> </p>
+<h2 style="font-weight: bold; font-size: 2.2em; margin-top: -50px">Web Components, Rainbows &amp; Unicorns</h2>
+
+<p style="font-style: italic; font-size: 18px; position: absolute; right: 20px; bottom: 20px;">
+  DISCLAIMER: May not actually contain any rainbows nor unicorns.
+</p></section>
   </div>
   <div class="slide hidden" id="slide-2">
     <section class="slide-content"><h3 id="web-components">Web Components</h3>
 <p>A concept built on a set of web standards to create custom, reusable, encapsulated HTML tags.</p>
 <p>Primarily based on four specifications:</p>
-<ul>
+<ol>
 <li><a href="https://w3c.github.io/webcomponents/spec/custom/">Custom Elements</a></li>
 <li><a href="https://w3c.github.io/webcomponents/spec/shadow/">Shadow DOM</a></li>
-<li><a href="https://w3c.github.io/webcomponents/spec/imports/">HTML imports</a></li>
 <li><a href="https://html.spec.whatwg.org/multipage/scripting.html#the-template-element/">HTML template</a></li>
-</ul>
+<li><a href="https://w3c.github.io/webcomponents/spec/imports/">HTML imports</a></li>
+</ol>
 <p><img src="img/webcomponents.svg" style="width: 200px; position: absolute; right: 30px; bottom: 30px" /></p>
 </section>
   </div>
   <div class="slide hidden" id="slide-3">
-    <section class="slide-content"><h3 id="custom-elements">Custom Elements</h3>
-<p>TBD</p>
-</section>
+    <section class="slide-content"><h3 id="1-custom-elements">1. Custom Elements</h3>
+<p>Specify and build custom DOM elements in a standardized way.</p>
+<pre>
+<span class="high1">class FlagIcon extends HTMLElement {</span>
+
+  static get observedAttributes() { return ["country"]; }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    this._countryCode = newValue;
+    this._updateRendering();
+  }
+
+  connectedCallback() { this._updateRendering(); }
+
+  get country() { return this._countryCode; }
+  set country(v) { this.setAttribute("country", v); }
+
+  _updateRendering() { /* ... */ }
+}
+
+<span class="high1">customElements.define("flag-icon", FlagIcon);</span>
+</pre></section>
   </div>
   <div class="slide hidden  " id="slide-4">
-    <section class="slide-content"><h3 id="shadow-dom">Shadow DOM</h3>
-<p>TBD</p>
-</section>
+    <section class="slide-content"><h3 id="2-shadow-dom">2. Shadow DOM</h3>
+<ul>
+<li>Isolated, self-contained &amp; scoped DOM subtree</li>
+<li>Scoped styles -&gt; bundle CSS with markup</li>
+<li>Primary purpose is <strong>encapsulation</strong></li>
+</ul>
+<p><img src="img/shadow-dom.png" style="height: 220px;" /></p>
+<p style="font-size: 1.6em; font-weight: bold; color: red; text-align: center">
+  <marquee>Shadow DOM !== Virtual DOM</marquee>
+</p></section>
   </div>
   <div class="slide hidden  " id="slide-5">
-    <section class="slide-content"><h3 id="shadow-dom-virtual-dom">Shadow DOM != Virtual DOM</h3>
-<p>Virtual DOM:</p>
-<p>Shadow DOM:</p>
-<ul>
-<li>Subtree</li>
-<li>Encapsulation</li>
-</ul>
-</section>
+    <section class="slide-content"><h3 id="3-html-template">3. HTML template</h3>
+<p>Native way of defining templates...</p>
+<p>Defining:</p>
+<pre>
+&lt;template id=<span class="high1">&quot;mytemplate&quot;</span>&gt;
+    &lt;img <span class="high3">src=&quot;&quot;</span> alt=&quot;an image&quot;&gt;
+    &lt;div class=&quot;comment&quot;&gt;&lt;/div&gt;
+&lt;/template&gt;
+</pre>
+
+<p>Using:</p>
+<pre>
+var t = document.querySelector(<span class="high1">'#mytemplate'</span>);
+<span class="high3">t.content.querySelector('img').src = 'logo.png';</span>
+
+var clone = document.importNode(t.content, true);
+document.body.appendChild(clone);
+</pre></section>
   </div>
   <div class="slide hidden" id="slide-6">
-    <section class="slide-content"><h3 id="html-imports">HTML imports</h3>
-<p>TBD</p>
+    <section class="slide-content"><h3 id="4-html-imports">4. HTML imports</h3>
+<ul>
+<li>Basically a simple way of loading/linking HTML (including JS &amp; CSS).</li>
+<li>Automatically de-duped</li>
+<li>Not widely supported!</li>
+</ul>
+<pre>
+&lt;head&gt;
+  &lt;link <span class="high1">rel=&quot;import&quot;</span> href=&quot;/path/to/file.html&quot;&gt;
+&lt;/head&gt;
+</pre></section>
+  </div>
+  <div class="slide hidden" id="slide-7">
+    <section class="slide-content"><h3 id="browser-support">Browser support</h3>
+<p><img src="img/browser-support.png" style="width: 100%" /></p>
 </section>
   </div>
-  <div class="slide hidden  " id="slide-7">
-    <section class="slide-content"><h3 id="html-template">HTML template</h3>
-<p>TBD</p>
-</section>
-  </div>
-  <div class="slide hidden  " id="slide-8">
+  <div class="slide hidden" id="slide-8">
     <section class="slide-content"><h3 id="-webcomponents-org-https-www-webcomponents-org-"><a href="https://www.webcomponents.org">webcomponents.org</a></h3>
 <p><img src="img/webcomponents-org.png" style="width: 100%" /></p>
 </section>
@@ -342,11 +400,6 @@ bower install emoji-rain</code></pre>
 </div></section>
   </div>
   <div class="slide hidden" id="slide-11">
-    <section class="slide-content"><h3 id="browser-support">Browser support</h3>
-<p><img src="img/browser-support.png" style="width: 100%" /></p>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-12">
     <section class="slide-content"><h3 id="libraries-to-make-life-easier">Libraries to make life easier</h3>
 <ul>
 <li><a href="https://www.polymer-project.org/">Polymer</a></li>
@@ -358,7 +411,7 @@ bower install emoji-rain</code></pre>
 </ul>
 </section>
   </div>
-  <div class="slide hidden" id="slide-13">
+  <div class="slide hidden" id="slide-12">
     <section class="slide-content"><div style="position: relative">
   <div style="position: absolute; bottom: 0">
     <h1>Polymer</h1>
@@ -368,13 +421,13 @@ bower install emoji-rain</code></pre>
 
 </div></section>
   </div>
-  <div class="slide hidden" id="slide-14">
-    <section class="slide-content"><h3 id="polymer-project">Polymer Project</h3>
+  <div class="slide hidden" id="slide-13">
+    <section class="slide-content"><h3 id="1-polymer-project">1. Polymer Project</h3>
 <p>Google project focusing on libraries, tools and patterns for <strong>Progressive Web Apps</strong>, taking full advantage of cutting-edge platform features like <strong>Web Components</strong>, <strong>Service Workers</strong> and <strong>HTTP/2</strong>.</p>
 </section>
   </div>
-  <div class="slide hidden  " id="slide-15">
-    <section class="slide-content"><h3 id="polymer-library">Polymer Library</h3>
+  <div class="slide hidden  " id="slide-14">
+    <section class="slide-content"><h3 id="2-polymer-library">2. Polymer Library</h3>
 <p>Polymer sprinkles a bit of sugar over the standard Web Components APIs.</p>
 <pre><code>&lt;dom-module id=&quot;x-custom&quot;&gt;
       &lt;template&gt;
@@ -401,8 +454,8 @@ bower install emoji-rain</code></pre>
     &lt;/dom-module&gt;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-16">
-    <section class="slide-content"><h3 id="polymer-app-toolbox">Polymer App Toolbox</h3>
+  <div class="slide hidden" id="slide-15">
+    <section class="slide-content"><h3 id="3-polymer-app-toolbox">3. Polymer App Toolbox</h3>
 <p>A collection of components, tools and templates for building Progressive Web Apps:</p>
 <ul>
 <li><a href="https://www.webcomponents.org/collection/PolymerElements/iron-elements">Iron Elements</a>: Basic application building blocks</li>
@@ -412,39 +465,43 @@ bower install emoji-rain</code></pre>
 </ul>
 </section>
   </div>
-  <div class="slide hidden" id="slide-17">
+  <div class="slide hidden" id="slide-16">
     <section class="slide-content"><h3 id="polymer-element-structure">Polymer element structure</h3>
-<pre><code>&lt;link rel=&quot;import&quot; href=&quot;../polymer/polymer-element.html&quot;&gt;
+<pre>
+<span class="high1">&lt;link rel=&quot;import&quot; href=&quot;../polymer/polymer-element.html&quot;&gt;</span>
 
 &lt;dom-module id=&quot;my-element&quot;&gt;
-  &lt;template&gt;
+<span class="high2">  &lt;template&gt;
     &lt;style&gt; /* The styles */&lt;/style&gt;
 
     &lt;div&gt;
       &lt;!-- The view --&gt;
     &lt;/div&gt;
-  &lt;/template&gt;
+  &lt;/template&gt;</span>
 
-  &lt;script&gt;
-    class MyElement extends Polymer.Element {
+
+<span class="high3">  &lt;script&gt;
+    class MyElement extends <span class="high1">Polymer.Element</span> {
       /* The logic */
     }
 
     window.customElements.define(MyElement.is, MyElement);
-  &lt;/script&gt;
-&lt;/dom-module&gt;</code></pre>
+  &lt;/script&gt;</span>
+&lt;/dom-module&gt;
+</pre></section>
+  </div>
+  <div class="slide hidden" id="slide-17">
+    <section class="slide-content"><h3 id="writing-a-component">Writing a component</h3>
+<p><img src="img/my-element.png" style="width: 600px" /></p>
 </section>
   </div>
   <div class="slide hidden" id="slide-18">
-    <section class="slide-content"><p><img src="img/my-element.png" style="width: 600px" /></p>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-19">
     <section class="slide-content"><h3 id="importing-dependencies">Importing dependencies</h3>
-<pre><code>&lt;link rel=&quot;import&quot; href=&quot;../polymer/polymer-element.html&quot;&gt;
-&lt;link rel=&quot;import&quot; href=&quot;../paper-input/paper-input.html&quot;&gt;
+<pre>
+&lt;link rel=&quot;import&quot; href=&quot;../polymer/polymer-element.html&quot;&gt;
+<span class="high1">&lt;link rel=&quot;import&quot; href=&quot;../paper-input/paper-input.html&quot;&gt;
 &lt;link rel=&quot;import&quot; href=&quot;../paper-button/paper-button.html&quot;&gt;
-&lt;link rel=&quot;import&quot; href=&quot;../iron-icons/iron-icons.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;../iron-icons/iron-icons.html&quot;&gt;</span>
 
 &lt;dom-module id=&quot;my-element&quot;&gt;
   &lt;template&gt;
@@ -455,13 +512,16 @@ bower install emoji-rain</code></pre>
     &lt;/div&gt;
   &lt;/template&gt;
 
-  ...</code></pre>
+  ...
+</pre>
+
 <p><img src="img/my-element.png" style="width: 500px; position: absolute; right: 20px; bottom: 20px;" /></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-20">
+  <div class="slide hidden" id="slide-19">
     <section class="slide-content"><h3 id="template">Template</h3>
-<pre><code>  &lt;template&gt;
+<pre>
+  &lt;template&gt;
     &lt;style&gt;
       h1 {
         text-decoration: underline;
@@ -474,63 +534,68 @@ bower install emoji-rain</code></pre>
 
     &lt;div class=&quot;container&quot;&gt;
 
-      &lt;h1&gt;Hello &lt;span class=&quot;name&quot;&gt;[[name]]&lt;/span&gt;!&lt;/h1&gt;
+      &lt;h1&gt;Hello &lt;span class=&quot;name&quot;&gt;<span class="high1">[[name]]</span>&lt;/span&gt;!&lt;/h1&gt;
 
       &lt;div&gt;
-        &lt;paper-input always-float-label label=&quot;New Name&quot; id=&quot;newName&quot;&gt;&lt;/paper-input&gt;
-        &lt;paper-button raised class=&quot;green&quot; on-click=&quot;handleClick&quot;&gt;Change&lt;/paper-button&gt;
+        <span class="high2">&lt;paper-input always-float-label</span> label=&quot;New Name&quot; id=&quot;newName&quot;&gt;&lt;/paper-input&gt;
+        <span class="high2">&lt;paper-button raised</span> class=&quot;green&quot; <span class="high3">on-click=&quot;handleClick&quot;</span>&gt;Change&lt;/paper-button&gt;
       &lt;/div&gt;
 
     &lt;/div&gt;
-  &lt;/template&gt;</code></pre>
+  &lt;/template&gt;
+</pre>
+
 <p><img src="img/my-element.png" style="width: 500px; position: absolute; right: 20px; bottom: 20px;" /></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-21">
+  <div class="slide hidden" id="slide-20">
     <section class="slide-content"><h3 id="script">Script</h3>
-<pre><code>  &lt;script&gt;
+<pre>
+  &lt;script&gt;
     class MyElement extends Polymer.Element {
-      static get is() { return &#39;my-element&#39;; }
-      static get properties() {
+      <span class="high1">static get is() { return 'my-element'; }</span>
+      <span class="high2">static get properties() {
         return {
           name: {
             type: String,
-            value: &#39;Polymer&#39;
+            value: 'Polymer'
           }
         };
-      }
+      }</span>
 
-      handleClick() {
-        if (this.$.newName.value !== &#39;&#39;) {
-          this.dispatchEvent(new CustomEvent(&#39;changeTheName&#39;, {
+      <span class="high3">handleClick()</span> {
+        if (this.$.newName.value !== '') {
+          this.dispatchEvent(<span class="high3">new CustomEvent('changeTheName', {
             detail: {
               name: this.$.newName.value
             }
-          }));
-          this.$.newName.value = &#39;&#39;;
+          })</span>);
+          this.$.newName.value = '';
         }
       }
     }
 
-    window.customElements.define(MyElement.is, MyElement);
-  &lt;/script&gt;</code></pre>
+    <span class="high1">window.customElements.define(MyElement.is, MyElement);</span>
+  &lt;/script&gt;
+</pre>
+
 <p><img src="img/my-element.png" style="width: 500px; position: absolute; right: 20px; bottom: 20px;" /></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-22">
+  <div class="slide hidden" id="slide-21">
     <section class="slide-content"><h3 id="polymer-3">Polymer 3</h3>
-<pre><code>import { Element }
-    from &#39;../node_modules/@polymer/polymer/polymer-element.js&#39;;
+<pre>
+<span class="high1">import { Element } from '../node_modules/@polymer/polymer/polymer-element.js';</span>
 
-export class MyApp extends Element {
+<span class="high1">export</span> class MyApp extends Element {
 
-  static get template() {
+  <span class="high3">static get template() {
     return `&lt;div&gt;This is my [[name]] app.&lt;/div&gt;`
-  }
+  }</span>
 
   constructor() {
     super();
-    this.name = &#39;3.0 preview&#39;;
+    this.name = '3.0 preview';
   }
 
   static get properties() {
@@ -540,33 +605,35 @@ export class MyApp extends Element {
   }
 }
 
-customElements.define(&#39;my-app&#39;, MyApp);</code></pre>
-<p><img src="img/npm.svg" style="width: 300px; position: absolute; right: 30px; bottom: 30px" /></p>
+customElements.define('my-app', MyApp);
+</pre>
+
+<p><img src="img/npm.svg" style="width: 300px; position: absolute; right: 30px; bottom: 30px;" /></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-22">
+    <section class="slide-content"><h1 id="why-">Why?</h1>
 </section>
   </div>
   <div class="slide hidden" id="slide-23">
     <section class="slide-content"><h1 id="why-">Why?</h1>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-24">
-    <section class="slide-content"><h1 id="why-">Why?</h1>
 <p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" /></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-25">
+  <div class="slide hidden" id="slide-24">
     <section class="slide-content"><h1 id="why-">Why?</h1>
 <p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" />
 <img src="img/backbone.svg" style="width: 500px; position: absolute; bottom: 150px; left: 100px;" /></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-26">
+  <div class="slide hidden" id="slide-25">
     <section class="slide-content"><h1 id="why-">Why?</h1>
 <p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" />
 <img src="img/backbone.svg" style="width: 500px; position: absolute; bottom: 150px; left: 100px;" />
 <img src="img/angular.svg" style="width: 250px; position: absolute; top: 50px; left: 100px;" /></p>
 </section>
   </div>
-  <div class="slide hidden" id="slide-27">
+  <div class="slide hidden" id="slide-26">
     <section class="slide-content"><h1 id="why-">Why?</h1>
 <p><img src="img/react.svg" style="width: 300px; position: absolute; bottom: 300px; right: 100px;" />
 <img src="img/backbone.svg" style="width: 500px; position: absolute; bottom: 150px; left: 100px;" />
@@ -574,8 +641,18 @@ customElements.define(&#39;my-app&#39;, MyApp);</code></pre>
 <img src="img/elm.svg" style="width: 250px; position: absolute; bottom: 50px; right: 400px;" /></p>
 </section>
   </div>
+  <div class="slide hidden" id="slide-27">
+    <section class="slide-content"><h3 id="sharing-is-caring-span-style-font-weight-normal-font-size-0-5em-color-aaa-a-k-a-i-m-lazy-don-t-want-to-do-it-twice-span-">Sharing Is Caring <span style="font-weight: normal; font-size: 0.5em; color: #aaa"> a.k.a. I&#39;m lazy &amp; don&#39;t want to do it twice!</span></h3>
+<p>Hosted NPM repository for module sharing:</p>
+<ul>
+<li>Nexus</li>
+<li>Sinopia</li>
+<li>Private npmjs.com</li>
+</ul>
+</section>
+  </div>
   <div class="slide hidden" id="slide-28">
-    <section class="slide-content"><h3 id="code-sharing-span-style-font-weight-normal-font-size-0-5em-color-aaa-a-k-a-i-m-lazy-don-t-want-to-do-it-twice-span-">Code Sharing <span style="font-weight: normal; font-size: 0.5em; color: #aaa"> a.k.a. I&#39;m lazy &amp; don&#39;t want to do it twice!</span></h3>
+    <section class="slide-content"><h3 id="sharing-is-caring-span-style-font-weight-normal-font-size-0-5em-color-aaa-a-k-a-i-m-lazy-don-t-want-to-do-it-twice-span-">Sharing Is Caring <span style="font-weight: normal; font-size: 0.5em; color: #aaa"> a.k.a. I&#39;m lazy &amp; don&#39;t want to do it twice!</span></h3>
 <p>Hosted NPM repository for module sharing:</p>
 <ul>
 <li>Nexus</li>
@@ -595,82 +672,104 @@ customElements.define(&#39;my-app&#39;, MyApp);</code></pre>
 </section>
   </div>
   <div class="slide hidden" id="slide-30">
-    <section class="slide-content"><h3 id="react">React</h3>
-<pre><code>class App extends Component {
-  render() {
-    return (
-      &lt;div className=&quot;App&quot;&gt;
-        &lt;my-element name={this.props.name} /&gt;
-      &lt;/div&gt;
-    );
-  }
-}</code></pre>
+    <section class="slide-content"><h1 id="-img-src-img-react-svg-style-width-150px-img-src-img-webcomponents-svg-style-width-150px-img-src-img-elm-svg-style-width-150px-"><img src="img/react.svg" style="width: 150px" /> + <img src="img/webcomponents.svg" style="width: 150px" /> + <img src="img/elm.svg" style="width: 150px" /></h1>
 </section>
   </div>
   <div class="slide hidden" id="slide-31">
+    <section class="slide-content"><h3 id="react-using-web-component">React: Using Web Component</h3>
+<pre>
+class App extends Component {
+  render() {
+    return (
+      &lt;div className=&quot;App&quot;&gt;
+        <span class="high1">&lt;my-element name={this.props.name} /&gt;</span>
+      &lt;/div&gt;
+    );
+  }
+}
+</pre>
+
+<p>Requires the links in <code>index.html</code>:</p>
+<pre>
+&lt;script src=&quot;bower_components/webcomponentsjs/webcomponents-lite.js&quot;&gt;&lt;/script&gt;
+<span class="high1">&lt;link rel=&quot;import&quot; href=&quot;bower_components/my-element/my-element.html&quot;&gt;</span>
+</pre></section>
+  </div>
+  <div class="slide hidden" id="slide-32">
     <section class="slide-content"><h3 id="react-adding-event-handling">React: Adding event handling</h3>
-<pre><code>class App extends Component {
+<pre>
+class App extends Component {
 
   componentDidMount() {
-    this.elem.addEventListener(&#39;changeTheName&#39;, this.onChangeTheName);
+    <span class="high3">this.elem.addEventListener('changeTheName', this.onChangeTheName);</span>
   }
 
   componentWillUnmount() {
-    this.elem.removeEventListener(&#39;changeTheName&#39;, this.onChangeTheName);
+    <span class="high3">this.elem.removeEventListener('changeTheName', this.onChangeTheName);</span>
   }
 
   onChangeTheName({ detail: { name } }) {
-    // use the name
+    <span class="high1">this.setState({ name });</span>
   }
 
   render() {
     return (
       &lt;div className=&quot;App&quot;&gt;
-        &lt;my-element name={this.props.name} ref={e =&gt; this.elem = e} /&gt;
+        &lt;my-element name=<span class="high1">{this.state.name}</span> <span class="high2">ref={e =&gt; this.elem = e}</span> /&gt;
       &lt;/div&gt;
     );
   }
-}</code></pre>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-32">
-    <section class="slide-content"><h3 id="elm">Elm</h3>
-<pre><code>myElement : List (Attribute msg) -&gt; List (Html msg) -&gt; Html msg
-myElement attributes children =
-    node &quot;my-element&quot; attributes children
-
-
-
-view : Model -&gt; Html Msg
-view model =
-    div []
-        [ myElement [ attribute &quot;name&quot; model.name] []
-        ]</code></pre>
-</section>
+}
+</pre></section>
   </div>
   <div class="slide hidden" id="slide-33">
-    <section class="slide-content"><h3 id="elm-adding-event-handling">Elm: Adding event handling</h3>
-<pre><code>nameExtractor : Json.Decoder String
-nameExtractor =
-    Json.at [ &quot;detail&quot;, &quot;name&quot; ] Json.string
-
-onChangeTheName : (String -&gt; msg) -&gt; Attribute msg
-onChangeTheName msg =
-    on &quot;changeTheName&quot; (Json.map msg nameExtractor)
-
-myElement : List (Attribute msg) -&gt; List (Html msg) -&gt; Html msg
+    <section class="slide-content"><h3 id="elm-using-web-component">Elm: Using Web Component</h3>
+<pre>
+<span class="high1">myElement</span> : List (Attribute msg) -> List (Html msg) -> Html msg
 myElement attributes children =
-    node &quot;my-element&quot; attributes children
+    <span class="high2">node "my-element" attributes children</span>
 
 
-view : Model -&gt; Html Msg
+view : Model -> Html Msg
 view model =
     div []
-        [ myElement [ attribute &quot;name&quot; model.name, , onChangeTheName ChangeTheName] []
-        ]</code></pre>
-</section>
+        <span class="high1">[ myElement [ attribute "name" model.name] []</span>
+        ]
+</pre>
+
+<div style="color: #aaa; margin-top: 60px;">
+  ...and don&#39;t forget about the links in <code>index.html</code>:
+
+  <pre>
+  &lt;script src=&quot;bower_components/webcomponentsjs/webcomponents-lite.js&quot;&gt;&lt;/script&gt;
+  &lt;link rel=&quot;import&quot; href=&quot;bower_components/my-element/my-element.html&quot;&gt;
+  </pre>
+</div></section>
   </div>
-  <div class="slide hidden author-slide" id="slide-34">
+  <div class="slide hidden" id="slide-34">
+    <section class="slide-content"><h3 id="elm-adding-event-handling">Elm: Adding event handling</h3>
+<pre>
+<span class="high3">nameExtractor : Json.Decoder String
+nameExtractor =
+    Json.at [ "detail", "name" ] Json.string</span>
+
+<span class="high1">onChangeTheName : (String -> msg) -> Attribute msg
+onChangeTheName msg =
+    on <span class="high2">"changeTheName"</span> (Json.map msg <span class="high3">nameExtractor</span>)</span>
+
+myElement : List (Attribute msg) -> List (Html msg) -> Html msg
+myElement attributes children =
+    node "my-element" attributes children
+
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ myElement [ attribute "name" model.name, <span class="high1">onChangeTheName ChangeTheName</span>] []
+        ]
+</pre></section>
+  </div>
+  <div class="slide hidden author-slide" id="slide-35">
     <section class="slide-content"><div class="author">
   <h1 class="name"></h1>
     <h3 class="url">

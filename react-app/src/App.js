@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import MyWrapper from './MyWrapper';
-
 class App extends Component {
 
   constructor(props) {
@@ -12,6 +10,14 @@ class App extends Component {
       name: 'React'
     };
     this.onChangeTheName = this.onChangeTheName.bind(this);
+  }
+
+  componentDidMount() {
+    this.elem.addEventListener('changeTheName', this.onChangeTheName);
+  }
+
+  componentWillUnmount() {
+      this.elem.removeEventListener('changeTheName', this.onChangeTheName);
   }
 
   onChangeTheName({ detail: { name }}) {
@@ -26,7 +32,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to <span className="name">React</span></h1>
         </header>
         <p className="App-intro">
-          <MyWrapper name={this.state.name} onChangeTheName={this.onChangeTheName} />
+          <my-element name={this.state.name} ref={ e => this.elem = e } />
         </p>
       </div>
     );
